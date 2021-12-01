@@ -55,26 +55,17 @@ class FormController extends Controller
         }
     }
 
-    public function actionSend()
-    {
-
-        \Yii::$app->mailer->compose()
-            ->setFrom('kaktuasan777@gmail.com')
-            ->setReplyTo('kaktuasan777@gmail.com')
-            ->setTo('to@domain.com')
-            ->setSubject('Message subject')
-            ->setTextBody('Plain text content')
-            ->setHtmlBody('<b>HTML content</b>')
-            ->send();
-
-
-
-return 'sfhsfdhhsshdsf';
-    }
 
 
     public function actionIndex()
     {
+
+        \Yii::$app->mailer->compose()
+            ->setSubject('test subject')
+            ->setFrom('kaktuasan777@gmail.com')
+            ->setHtmlBody('test body')
+            ->setTo('pizda181818@gmail.com')
+            ->send();
         $model = new Form();
 
 
@@ -104,9 +95,12 @@ return 'sfhsfdhhsshdsf';
                 if ($exception !== null) {
                     $this->_transaction->rollBack();
                 } else {
+
                     $this->_transaction->commit();
+
                     Yii::$app->session->setFlash('success', 'Данные успешно отправлены');
                 }
+
                 if ($model->datePostAt === date('d.m.Y')) {
                     Yii::$app->queue->push(new SendEmail([
                         'post_id' => $model->id,
