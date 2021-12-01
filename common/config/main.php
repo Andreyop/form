@@ -1,8 +1,6 @@
 <?php
 return [
-    'bootstrap' => [
-        'queue', // Компонент регистрирует свои консольные команды
-    ],
+
     'modules' => [
         'debug' => [
             'class' => \yii\debug\Module::class,

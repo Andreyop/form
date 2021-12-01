@@ -105,11 +105,6 @@ class FormController extends Controller
                     Yii::$app->queue->push(new SendEmail([
                         'post_id' => $model->id,
                     ]));
-//                    $res = $model->sendMail($model->id);
-//                    if ($res) {
-//
-//                        Yii::$app->session->setFlash('success', 'Данные успешно сохранены и отправлены на почту');
-//                    }
                 } else {
                     $delaySend = strtotime($model->datePostAt) - strtotime('now');
                     Yii::$app->queue->delay($delaySend)->push(new SendEmail([
@@ -131,35 +126,40 @@ class FormController extends Controller
             'model' => $model,
         ]);
     }
-    /**
-     * Displays a single Form model.
-     * @param int $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
 
 
-    public function actionView() {
 
-        $this->view->title = 'Связанные данные в таблицах';
-        $posts = Form::find()->with('postsQueues')->all();
-        $email = User::find()->select(['email'])->where('username = :username', [':username' => 'admin'])->asArray()->one();
-        $admin_email = $email['email'];
 
-        $id = 101;
-        $sender = Form::find()->with('postsQueues')->with('descriptivePost')->with('contactPost')->where('id = :id', [':id' => $id])->one();
 
-        return $this->render('view', compact('posts', 'sender', 'admin_email'));
-    }
-    public function actionValidate(){
-        $model = new Form();
+//    /**
+//     * Displays a single Form model.
+//     * @param int $id
+//     * @return mixed
+//     * @throws NotFoundHttpException if the model cannot be found
+//     */
 
-        $request = \Yii::$app->getRequest();
-        if ($request->isPost && $model->load($request->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($model);
-        }
-    }
+
+//    public function actionView() {
+//
+//        $this->view->title = 'Связанные данные в таблицах';
+//        $posts = Form::find()->with('postsQueues')->all();
+//        $email = User::find()->select(['email'])->where('username = :username', [':username' => 'admin'])->asArray()->one();
+//        $admin_email = $email['email'];
+//
+//        $id = 101;
+//        $sender = Form::find()->with('postsQueues')->with('descriptivePost')->with('contactPost')->where('id = :id', [':id' => $id])->one();
+//
+//        return $this->render('view', compact('posts', 'sender', 'admin_email'));
+//    }
+//    public function actionValidate(){
+//        $model = new Form();
+//
+//        $request = \Yii::$app->getRequest();
+//        if ($request->isPost && $model->load($request->post())) {
+//            \Yii::$app->response->format = Response::FORMAT_JSON;
+//            return ActiveForm::validate($model);
+//        }
+//    }
 //    /**
 //     * Creates a new Form model.
 //     * If creation is successful, the browser will be redirected to the 'view' page.

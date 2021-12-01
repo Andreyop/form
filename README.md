@@ -20,7 +20,7 @@ composer install
 php init  //вибрать Dev
 ```
 
-В "common/modals/config-local"
+В "common/config/main-local"
 
 > Настраиваем подключение к БД
 > 

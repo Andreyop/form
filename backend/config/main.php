@@ -80,7 +80,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '' => 'form/index',
+                '' => 'site/index',
 //                '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
         ],

@@ -18,14 +18,14 @@ return [
     ],
     'controllerMap' => [
 
-//        'migrate' => [
-//            'class' => 'yii\console\controllers\MigrateController',
-//            'migrationPath' => null,
-//            'migrationNamespaces' => [
-//                'common\fixtures',
-//                'yii\queue\db\migrations',
-//            ],
-//        ],
+        'migrate' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationPath' => null,
+            'migrationNamespaces' => [
+                'common\fixtures',
+                'yii\queue\db\migrations',
+            ],
+        ],
         'fixture' => [
 
             'class' => 'yii\console\controllers\FixtureController',
