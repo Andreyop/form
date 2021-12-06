@@ -8,6 +8,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-backend',
+    'timeZone' => 'Europe/Kiev',
     'name' => 'Test',
     'defaultRoute' => 'form/index',
     'layout'=>'test',
@@ -47,24 +48,24 @@ return [
         ],
 
         'mailer' => [
-            'class' => \yii\swiftmailer\Mailer::class,
-            'useFileTransport' => true,
-            'viewPath' => '@common/mail',
-            'htmlLayout' => 'layouts/main-html',
-            'messageConfig' => [
-                'charset' => 'UTF-8',
-                'from' => ['manager-admin@site.com' => 'From Manager Post Queue'],
-            ],
+//            'class' => \yii\swiftmailer\Mailer::class,
+//            'useFileTransport' => true,
+//            'viewPath' => '@common/mail',
+//            'htmlLayout' => 'layouts/main-html',
+//            'messageConfig' => [
+//                'charset' => 'UTF-8',
+//                'from' => ['manager-admin@site.com' => 'From Manager Post Queue'],
+//            ],
 
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.ukr.net',
-                'username' => 'kaktuasan777',
-                'password' => 'kaktuasan0712',
-                'port' => '465',
-                'encryption' => 'ssl',
+//            'transport' => [
+//                'class' => 'Swift_SmtpTransport',
+//                'host' => ' smtp-relay.gmail.com',
+//                'username' => 'kaktuasan777',
+//                'password' => 'kaktuasan0712',
+//                'port' => '587',
+//                'encryption' => 'tls',
 //                'streamOptions' => [ 'ssl' => [ 'allow_self_signed' => true, 'verify_peer' => false, 'verify_peer_name' => false, ], ]
-            ],
+//            ],
         ],
         'queue' => [
             'class' => \yii\queue\db\Queue::class,

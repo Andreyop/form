@@ -59,17 +59,13 @@ class FormController extends Controller
 
     public function actionIndex()
     {
-
-        \Yii::$app->mailer->compose()
-            ->setSubject('test subject')
-            ->setFrom('kaktuasan777@gmail.com')
-            ->setHtmlBody('test body')
-            ->setTo('pizda181818@gmail.com')
-            ->send();
         $model = new Form();
 
 
+
+
         $model->load(Yii::$app->request->post());
+
 
 
         if (Yii::$app->request->isAjax) {
@@ -90,7 +86,29 @@ class FormController extends Controller
                 $model->datePostAt = $post_model['datePostAt'];
                 //добавление оконченно
                 $this->_transaction = Yii::$app->db->beginTransaction();
+//                Yii::$app->mailer->compose('views/contact-html')
+//                    ->setSubject('test subject')
+//                    ->setFrom('kaktuasan777@gmail.com')
+//                    ->setHtmlBody('views/contact-html')
+//                    ->setTo('kaktuasan777@gmail.com')
+//                    ->send();
+
+
                 $model->save();
+                if($model->save()){
+                    $id = $model->id;
+                    $sender = Form::find()->with('postsQueues')->with('descriptivePost')->with('contactPost')->where('id = :id', [':id' => $id])->limit(1)->one();
+//                $email = User::find()->select(['email'])->where('username = :username', [':username' => 'admin'])->asArray()->one();
+
+                    // Set layout params
+                    Yii::$app->mailer->getView()->params['CompanyName'] = $sender->company_name;
+                    $email = \common\models\Admin::find()->orderBy(['id' => SORT_DESC])->one();
+                    $admin_email = $email->admin_email;
+                    Yii::$app->mailer->compose(
+                        'views/preview-html', ['sender' => $sender])->setTo($admin_email)
+                        ->setSubject('Создано задание для размещения')->send();
+                }
+
                 $exception = Yii::$app->errorHandler->exception;
                 if ($exception !== null) {
                     $this->_transaction->rollBack();
@@ -98,10 +116,10 @@ class FormController extends Controller
 
                     $this->_transaction->commit();
 
-                    Yii::$app->session->setFlash('success', 'Данные успешно отправлены');
+                    Yii::$app->session->setFlash('success', 'Данные успешно сохранены и отправлены на почту '. $admin_email);
                 }
 
-                if ($model->datePostAt === date('d.m.Y')) {
+                if ($model->datePostAt === date('d.m.Y H:i')) {
                     Yii::$app->queue->push(new SendEmail([
                         'post_id' => $model->id,
                     ]));
@@ -116,7 +134,7 @@ class FormController extends Controller
                 $model = new Form();
             } else {
                 Yii::$app->session->setFlash('danger', 'Данные не отправлены');
-                var_dump($model->getErrors());
+              echo $model->getErrors();
                 return ActiveForm::validate($model);
             }
 
@@ -126,40 +144,35 @@ class FormController extends Controller
             'model' => $model,
         ]);
     }
+    /**
+     * Displays a single Form model.
+     * @param int $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
 
 
+    public function actionView() {
 
+        $this->view->title = 'Связанные данные в таблицах';
+        $posts = Form::find()->with('postsQueues')->all();
+        $email = User::find()->select(['email'])->where('username = :username', [':username' => 'admin'])->asArray()->one();
+        $admin_email = $email['email'];
 
+        $id = 101;
+        $sender = Form::find()->with('postsQueues')->with('descriptivePost')->with('contactPost')->where('id = :id', [':id' => $id])->one();
 
-//    /**
-//     * Displays a single Form model.
-//     * @param int $id
-//     * @return mixed
-//     * @throws NotFoundHttpException if the model cannot be found
-//     */
+        return $this->render('view', compact('posts', 'sender', 'admin_email'));
+    }
+    public function actionValidate(){
+        $model = new Form();
 
-
-//    public function actionView() {
-//
-//        $this->view->title = 'Связанные данные в таблицах';
-//        $posts = Form::find()->with('postsQueues')->all();
-//        $email = User::find()->select(['email'])->where('username = :username', [':username' => 'admin'])->asArray()->one();
-//        $admin_email = $email['email'];
-//
-//        $id = 101;
-//        $sender = Form::find()->with('postsQueues')->with('descriptivePost')->with('contactPost')->where('id = :id', [':id' => $id])->one();
-//
-//        return $this->render('view', compact('posts', 'sender', 'admin_email'));
-//    }
-//    public function actionValidate(){
-//        $model = new Form();
-//
-//        $request = \Yii::$app->getRequest();
-//        if ($request->isPost && $model->load($request->post())) {
-//            \Yii::$app->response->format = Response::FORMAT_JSON;
-//            return ActiveForm::validate($model);
-//        }
-//    }
+        $request = \Yii::$app->getRequest();
+        if ($request->isPost && $model->load($request->post())) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+    }
 //    /**
 //     * Creates a new Form model.
 //     * If creation is successful, the browser will be redirected to the 'view' page.
