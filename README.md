@@ -7,6 +7,7 @@
 ```
 git clone https://github.com/Andreyop/form.git
 ```
+Перейдите в корневую папку проекта
 
 Выполните команду
 
